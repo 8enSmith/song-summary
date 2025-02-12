@@ -13,12 +13,12 @@ export async function GET(request: NextRequest) {
   const Client = new Genius.Client(process.env.GENIUS_API_KEY || '');
   const searches = await Client.songs.search(query);
 
-  const items = searches.map(song => ({
-    id: song.id.toString(),
-    title: song.title,
-    artist: song.artist.name,
-    value: song.id.toString(),
-    label: `${song.title} - ${song.artist.name}`
+  const items = searches.map(({ id, title, artist: { name } }) => ({
+    id: id.toString(),
+    title,
+    artist: name,
+    value: id.toString(),
+    label: `${title} - ${name}`
   }));
 
   return Response.json({ items });

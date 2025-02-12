@@ -40,7 +40,7 @@ export async function GET(
       q: query,
       type: ['video'],
       maxResults: 1,
-      videoEmbeddable: true,
+      videoEmbeddable: 'true',
     });
 
     console.log('Search response received:', searchResponse.data);
@@ -57,7 +57,7 @@ export async function GET(
     console.error('Full error:', error);
     
     // Check if it's a googleapis error
-    const gError = error as { code?: number; errors?: any[] };
+    const gError = error as { code?: number; errors?: Array<{ message: string; domain: string; reason: string }> };
     if (gError.code || gError.errors) {
       console.error('Google API Error:', {
         code: gError.code,
