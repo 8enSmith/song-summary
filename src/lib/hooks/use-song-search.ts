@@ -51,3 +51,15 @@ export function useLyricsAnalysis(lyrics: string) {
     enabled: !!lyrics
   });
 }
+
+export function useVideoId(songId: string, title?: string, artist?: string) {
+  return useQuery({
+    queryKey: ['video', songId],
+    queryFn: async () => {
+      if (!songId || !title || !artist) return { videoId: '' };
+      const res = await fetch(`/api/lyrics/${songId}/video?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`);
+      return res.json();
+    },
+    enabled: !!songId && !!title && !!artist
+  });
+}

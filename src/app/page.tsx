@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { AutoComplete } from '@/components/autocomplete';
-import { useSongSearch, useSongLyrics, useLyricsAnalysis } from '@/lib/hooks/use-song-search';
+import { useSongSearch, useSongLyrics, useLyricsAnalysis, useVideoId } from '@/lib/hooks/use-song-search';
 
 export default function SearchPage() {
   const [selectedSong, setSelectedSong] = useState('');
@@ -11,6 +11,13 @@ export default function SearchPage() {
   const { data, isLoading } = useSongSearch(searchQuery);
   const { data: lyricsData, isLoading: isLoadingLyrics } = useSongLyrics(selectedSong);
   const { data: analysisData, isLoading: isLoadingAnalysis } = useLyricsAnalysis(lyricsData?.lyrics || '');
+  
+  const selectedSongData = data?.items?.find(song => song.id === selectedSong);
+  const { data: videoData } = useVideoId(
+    selectedSong,
+    selectedSongData?.title,
+    selectedSongData?.artist
+  );
 
   const formattedItems = data?.items?.map(song => ({
     value: song.id,
@@ -33,6 +40,21 @@ export default function SearchPage() {
           emptyMessage={isLoading ? "Loading..." : "No songs found."}
         />
 
+        {selectedSong && videoData?.videoId && (
+          <div className="mt-8">
+            <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
+              <div className="relative pb-[56.25%] h-0">
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full rounded-md"
+                  src={`https://www.youtube.com/embed/${videoData.videoId}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {selectedSong && (
           <div className="mt-8 grid grid-cols-2 gap-6">
             <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
@@ -51,6 +73,7 @@ export default function SearchPage() {
             <div className="flex flex-col space-y-6">
               {lyricsData?.thumbnail && (
                 <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
+                  <h2 className="text-xl font-semibold text-white mb-4 text-center">Album Art</h2>
                   <Image 
                     src={lyricsData.thumbnail} 
                     alt="Album Art" 
