@@ -24,20 +24,23 @@ A modern web application that helps you discover and analyze songs. Get lyrics, 
 ## Getting Started
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/song-summary.git
 cd song-summary
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 3. Set up environment variables:
-Create a `.env.local` file with the necessary API keys (refer to `.env.example` for required variables)
+   Create a `.env.local` file with the necessary API keys (refer to `.env.example` for required variables)
 
 4. Run the development server:
+
 ```bash
 pnpm dev
 ```

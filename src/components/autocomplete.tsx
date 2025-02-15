@@ -1,7 +1,10 @@
-import { cn } from '@/lib/utils';
+import { useMemo, useState } from 'react';
+
 import { Command as CommandPrimitive } from 'cmdk';
 import { Check } from 'lucide-react';
-import { useMemo, useState } from 'react';
+
+import { cn } from '@/lib/utils';
+
 import {
   Command,
   CommandEmpty,
@@ -38,10 +41,13 @@ export function AutoComplete<T extends string>({
 
   const labels = useMemo(
     () =>
-      items.reduce((acc, item) => {
-        acc[item.value] = item.label;
-        return acc;
-      }, {} as Record<string, string>),
+      items.reduce(
+        (acc, item) => {
+          acc[item.value] = item.label;
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
     [items]
   );
 

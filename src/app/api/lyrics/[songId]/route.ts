@@ -1,8 +1,12 @@
-import Genius from 'genius-lyrics';
 import { NextRequest } from 'next/server';
+
+import Genius from 'genius-lyrics';
 import { StatusCodes } from 'http-status-codes';
 
-export async function GET(_request: NextRequest, { params }: { params: { songId: string } }) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: { songId: string } }
+) {
   // See https://nextjs.org/docs/messages/sync-dynamic-apis#possible-ways-to-fix-it
   const { songId } = await params;
 
@@ -12,13 +16,19 @@ export async function GET(_request: NextRequest, { params }: { params: { songId:
     console.log(song);
 
     if (!song) {
-      return Response.json({ error: 'Song not found' }, { status: StatusCodes.NOT_FOUND });
+      return Response.json(
+        { error: 'Song not found' },
+        { status: StatusCodes.NOT_FOUND }
+      );
     }
 
     const lyrics = await song.lyrics();
     return Response.json({ lyrics, thumbnail: song.thumbnail });
   } catch (error) {
     console.error('Error fetching lyrics:', error);
-    return Response.json({ error: 'Failed to fetch lyrics' }, { status: StatusCodes.INTERNAL_SERVER_ERROR });
+    return Response.json(
+      { error: 'Failed to fetch lyrics' },
+      { status: StatusCodes.INTERNAL_SERVER_ERROR }
+    );
   }
 }

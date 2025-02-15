@@ -1,5 +1,5 @@
-import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
+import { generateText } from 'ai';
 import { StatusCodes } from 'http-status-codes';
 
 export async function POST(req: Request) {
@@ -15,8 +15,7 @@ export async function POST(req: Request) {
 
     const { text: analysis } = await generateText({
       model: openai('o3-mini'),
-      prompt:
-        `You are a music expert who analyzes song lyrics. Provide a concise but insightful analysis of the themes, meaning, and emotional content of the lyrics provided. Keep the analysis to 2-3 paragraphs. The lyrics are as follows: ${lyrics}`,
+      prompt: `You are a music expert who analyzes song lyrics. Provide a concise but insightful analysis of the themes, meaning, and emotional content of the lyrics provided. Keep the analysis to 2-3 paragraphs. The lyrics are as follows: ${lyrics}`,
     });
 
     return Response.json({ analysis }, { status: StatusCodes.OK });

@@ -1,5 +1,6 @@
-import Genius from 'genius-lyrics';
 import { NextRequest } from 'next/server';
+
+import Genius from 'genius-lyrics';
 import { StatusCodes } from 'http-status-codes';
 
 export async function GET(request: NextRequest) {
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     title,
     artist: name,
     value: id.toString(),
-    label: `${title} - ${name}`
+    label: `${title} - ${name}`,
   }));
 
   return Response.json({ items });

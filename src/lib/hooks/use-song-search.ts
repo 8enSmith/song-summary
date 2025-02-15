@@ -19,7 +19,7 @@ export function useSongSearch(query: string) {
       const res = await fetch(`/api/lyrics?q=${encodeURIComponent(query)}`);
       return res.json();
     },
-    enabled: query.length > 0
+    enabled: query.length > 0,
   });
 }
 
@@ -31,7 +31,7 @@ export function useSongLyrics(songId: string) {
       const res = await fetch(`/api/lyrics/${songId}`);
       return res.json();
     },
-    enabled: !!songId
+    enabled: !!songId,
   });
 }
 
@@ -43,12 +43,12 @@ export function useLyricsAnalysis(lyrics: string) {
       const res = await fetch('/api/lyrics/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lyrics })
+        body: JSON.stringify({ lyrics }),
       });
       const data = await res.json();
       return data;
     },
-    enabled: !!lyrics
+    enabled: !!lyrics,
   });
 }
 
@@ -57,9 +57,11 @@ export function useVideoId(songId: string, title?: string, artist?: string) {
     queryKey: ['video', songId],
     queryFn: async () => {
       if (!songId || !title || !artist) return { videoId: '' };
-      const res = await fetch(`/api/lyrics/${songId}/video?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`);
+      const res = await fetch(
+        `/api/lyrics/${songId}/video?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`
+      );
       return res.json();
     },
-    enabled: !!songId && !!title && !!artist
+    enabled: !!songId && !!title && !!artist,
   });
 }
