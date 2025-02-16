@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import { AutoComplete } from '@/components/autocomplete';
+import { LoadingSpinner } from '@/components/loading-spinner';
 
 import {
   useLyricsAnalysis,
@@ -39,7 +40,7 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl relative">
+      <div className="w-full max-w-5xl relative">
         <h1 className="text-7xl font-extrabold text-white mb-8 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300 transition-all duration-300 hover:scale-105 hover:from-white hover:to-blue-300">
           Song Summary
         </h1>
@@ -75,7 +76,8 @@ export default function SearchPage() {
                 Lyrics
               </h2>
               {isLoadingLyrics ? (
-                <div className="text-gray-400 text-center">
+                <div className="text-gray-400 text-center flex items-center justify-center">
+                  <LoadingSpinner className="mr-2" />
                   Loading lyrics...
                 </div>
               ) : lyricsData?.lyrics ? (
@@ -88,26 +90,39 @@ export default function SearchPage() {
             </div>
 
             <div className="flex flex-col space-y-6">
-              {lyricsData?.thumbnail && (
+              {isLoadingLyrics ? (
                 <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
                   <h2 className="text-xl font-semibold text-white mb-4 text-center">
                     Album Art
                   </h2>
-                  <Image
-                    src={lyricsData.thumbnail}
-                    alt="Album Art"
-                    width={500}
-                    height={500}
-                    className="w-full h-auto rounded-md"
-                  />
+                  <div className="text-gray-400 text-center flex items-center justify-center min-h-[200px]">
+                    <LoadingSpinner className="mr-2" />
+                    Loading album art...
+                  </div>
                 </div>
+              ) : (
+                lyricsData?.thumbnail && (
+                  <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
+                    <h2 className="text-xl font-semibold text-white mb-4 text-center">
+                      Album Art
+                    </h2>
+                    <Image
+                      src={lyricsData.thumbnail}
+                      alt="Album Art"
+                      width={500}
+                      height={500}
+                      className="w-full h-auto rounded-md"
+                    />
+                  </div>
+                )
               )}
               <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
                 <h2 className="text-xl font-semibold text-white mb-4 text-center">
                   Analysis
                 </h2>
                 {isLoadingAnalysis ? (
-                  <div className="text-gray-400 text-center">
+                  <div className="text-gray-400 text-center flex items-center justify-center">
+                    <LoadingSpinner className="mr-2" />
                     Analyzing lyrics...
                   </div>
                 ) : analysisData?.analysis ? (

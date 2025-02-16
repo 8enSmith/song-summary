@@ -3,9 +3,11 @@
 // 2. Enable the YouTube Data API v3 for your project
 // 3. Create API credentials and add them to your .env.local file as YOUTUBE_API_KEY
 import { google } from 'googleapis';
+import { StatusCodes } from 'http-status-codes';
 
 export async function GET(
   request: Request,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   { params }: { params: { songId: string } }
 ) {
   const { searchParams } = new URL(request.url);
@@ -77,7 +79,7 @@ export async function GET(
         code: gError.code,
         apiErrors: gError.errors,
       },
-      { status: 500 }
+      { status: StatusCodes.INTERNAL_SERVER_ERROR }
     );
   }
 }

@@ -11,7 +11,7 @@ interface SongLyrics {
   thumbnail: string;
 }
 
-export function useSongSearch(query: string) {
+export const useSongSearch = (query: string) => {
   return useQuery<{ items: Song[] }>({
     queryKey: ['songs', query],
     queryFn: async () => {
@@ -21,9 +21,9 @@ export function useSongSearch(query: string) {
     },
     enabled: query.length > 0,
   });
-}
+};
 
-export function useSongLyrics(songId: string) {
+export const useSongLyrics = (songId: string) => {
   return useQuery<SongLyrics>({
     queryKey: ['lyrics', songId],
     queryFn: async () => {
@@ -33,9 +33,9 @@ export function useSongLyrics(songId: string) {
     },
     enabled: !!songId,
   });
-}
+};
 
-export function useLyricsAnalysis(lyrics: string) {
+export const useLyricsAnalysis = (lyrics: string) => {
   return useQuery({
     queryKey: ['lyrics-analysis', lyrics],
     queryFn: async () => {
@@ -50,9 +50,9 @@ export function useLyricsAnalysis(lyrics: string) {
     },
     enabled: !!lyrics,
   });
-}
+};
 
-export function useVideoId(songId: string, title?: string, artist?: string) {
+export const useVideoId = (songId: string, title?: string, artist?: string) => {
   return useQuery({
     queryKey: ['video', songId],
     queryFn: async () => {
@@ -64,4 +64,4 @@ export function useVideoId(songId: string, title?: string, artist?: string) {
     },
     enabled: !!songId && !!title && !!artist,
   });
-}
+};
