@@ -1,6 +1,6 @@
 import { describe, expect, test, vi, type Mock } from 'vitest';
 import { generateText } from 'ai';
-import { POST } from '../route';
+import { POST } from './route';
 import { openai } from '@ai-sdk/openai';
 
 vi.mock('@ai-sdk/openai', () => ({
