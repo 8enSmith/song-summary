@@ -7,7 +7,6 @@ vi.mock('@ai-sdk/openai', () => ({
   openai: vi.fn(),
 }));
 
-// Mock the AI module
 vi.mock('ai', () => ({
   generateText: vi.fn(),
 }));
