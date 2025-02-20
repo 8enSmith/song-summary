@@ -4,6 +4,9 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { AutoComplete } from '@/components/autocomplete';
 import { LoadingSpinner } from '@/components/loading-spinner';
+import { Lyrics } from '@/components/lyrics';
+import { Analysis } from '@/components/analysis';
+import { YouTube } from '@/components/youtube';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   useLyricsAnalysis,
@@ -54,65 +57,21 @@ export default function SearchPage() {
 
         {selectedSong && videoData?.videoId && (
           <div className="mt-8">
-            <Card className="bg-gray-800/50 border-gray-700">
-              <CardContent className="p-6">
-                <div className="relative pb-[56.25%] h-0">
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full rounded-md"
-                    src={`https://www.youtube.com/embed/${videoData.videoId}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            <YouTube videoId={videoData.videoId} />
           </div>
         )}
 
         {selectedSong && (
           <div className="mt-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-gray-800/50 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-center text-white">Lyrics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isLoadingLyrics ? (
-                    <div className="text-gray-400 text-center flex items-center justify-center">
-                      <LoadingSpinner className="mr-2" />
-                      Loading lyrics...
-                    </div>
-                  ) : lyricsData?.lyrics ? (
-                    <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
-                      {lyricsData.lyrics}
-                    </div>
-                  ) : (
-                    <div className="text-gray-400 text-center">No lyrics found</div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gray-800/50 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-center text-white">Analysis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isLoadingAnalysis ? (
-                    <div className="text-gray-400 text-center flex items-center justify-center">
-                      <LoadingSpinner className="mr-2" />
-                      Analyzing lyrics...
-                    </div>
-                  ) : analysisData?.analysis ? (
-                    <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
-                      {analysisData.analysis}
-                    </div>
-                  ) : (
-                    <div className="text-gray-400 text-center">
-                      No analysis available
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <Lyrics 
+                lyrics={lyricsData?.lyrics}
+                isLoading={isLoadingLyrics}
+              />
+              <Analysis
+                analysis={analysisData?.analysis}
+                isLoading={isLoadingAnalysis}
+              />
             </div>
 
             {isLoadingLyrics ? (
