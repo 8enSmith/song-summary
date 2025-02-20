@@ -70,58 +70,28 @@ export default function SearchPage() {
         )}
 
         {selectedSong && (
-          <div className="mt-8 grid grid-cols-2 gap-6">
-            <Card className="bg-gray-800/50 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-center text-white">Lyrics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoadingLyrics ? (
-                  <div className="text-gray-400 text-center flex items-center justify-center">
-                    <LoadingSpinner className="mr-2" />
-                    Loading lyrics...
-                  </div>
-                ) : lyricsData?.lyrics ? (
-                  <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
-                    {lyricsData.lyrics}
-                  </div>
-                ) : (
-                  <div className="text-gray-400 text-center">No lyrics found</div>
-                )}
-              </CardContent>
-            </Card>
-
-            <div className="flex flex-col space-y-6">
-              {isLoadingLyrics ? (
-                <Card className="bg-gray-800/50 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-center text-white">Album Art</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-gray-400 text-center flex items-center justify-center min-h-[200px]">
+          <div className="mt-8 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-center text-white">Lyrics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingLyrics ? (
+                    <div className="text-gray-400 text-center flex items-center justify-center">
                       <LoadingSpinner className="mr-2" />
-                      Loading album art...
+                      Loading lyrics...
                     </div>
-                  </CardContent>
-                </Card>
-              ) : (
-                lyricsData?.thumbnail && (
-                  <Card className="bg-gray-800/50 border-gray-700">
-                    <CardHeader>
-                      <CardTitle className="text-center text-white">Album Art</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Image
-                        src={lyricsData.thumbnail}
-                        alt="Album Art"
-                        width={500}
-                        height={500}
-                        className="w-full h-auto rounded-md"
-                      />
-                    </CardContent>
-                  </Card>
-                )
-              )}
+                  ) : lyricsData?.lyrics ? (
+                    <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
+                      {lyricsData.lyrics}
+                    </div>
+                  ) : (
+                    <div className="text-gray-400 text-center">No lyrics found</div>
+                  )}
+                </CardContent>
+              </Card>
+
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
                   <CardTitle className="text-center text-white">Analysis</CardTitle>
@@ -144,6 +114,37 @@ export default function SearchPage() {
                 </CardContent>
               </Card>
             </div>
+
+            {isLoadingLyrics ? (
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-center text-white">Album Art</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-gray-400 text-center flex items-center justify-center min-h-[200px]">
+                    <LoadingSpinner className="mr-2" />
+                    Loading album art...
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              lyricsData?.thumbnail && (
+                <Card className="bg-gray-800/50 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="text-center text-white">Album Art</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Image
+                      src={lyricsData.thumbnail}
+                      alt="Album Art"
+                      width={500}
+                      height={500}
+                      className="w-full h-auto rounded-md"
+                    />
+                  </CardContent>
+                </Card>
+              )
+            )}
           </div>
         )}
       </div>
