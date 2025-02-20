@@ -1,12 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-
 import Image from 'next/image';
-
 import { AutoComplete } from '@/components/autocomplete';
 import { LoadingSpinner } from '@/components/loading-spinner';
-
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   useLyricsAnalysis,
   useSongLyrics,
@@ -56,85 +54,95 @@ export default function SearchPage() {
 
         {selectedSong && videoData?.videoId && (
           <div className="mt-8">
-            <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
-              <div className="relative pb-[56.25%] h-0">
-                <iframe
-                  className="absolute top-0 left-0 w-full h-full rounded-md"
-                  src={`https://www.youtube.com/embed/${videoData.videoId}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            </div>
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardContent className="p-6">
+                <div className="relative pb-[56.25%] h-0">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-md"
+                    src={`https://www.youtube.com/embed/${videoData.videoId}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
         {selectedSong && (
           <div className="mt-8 grid grid-cols-2 gap-6">
-            <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
-              <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                Lyrics
-              </h2>
-              {isLoadingLyrics ? (
-                <div className="text-gray-400 text-center flex items-center justify-center">
-                  <LoadingSpinner className="mr-2" />
-                  Loading lyrics...
-                </div>
-              ) : lyricsData?.lyrics ? (
-                <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
-                  {lyricsData.lyrics}
-                </div>
-              ) : (
-                <div className="text-gray-400 text-center">No lyrics found</div>
-              )}
-            </div>
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-center text-white">Lyrics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingLyrics ? (
+                  <div className="text-gray-400 text-center flex items-center justify-center">
+                    <LoadingSpinner className="mr-2" />
+                    Loading lyrics...
+                  </div>
+                ) : lyricsData?.lyrics ? (
+                  <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
+                    {lyricsData.lyrics}
+                  </div>
+                ) : (
+                  <div className="text-gray-400 text-center">No lyrics found</div>
+                )}
+              </CardContent>
+            </Card>
 
             <div className="flex flex-col space-y-6">
               {isLoadingLyrics ? (
-                <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
-                  <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                    Album Art
-                  </h2>
-                  <div className="text-gray-400 text-center flex items-center justify-center min-h-[200px]">
-                    <LoadingSpinner className="mr-2" />
-                    Loading album art...
-                  </div>
-                </div>
+                <Card className="bg-gray-800/50 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="text-center text-white">Album Art</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-gray-400 text-center flex items-center justify-center min-h-[200px]">
+                      <LoadingSpinner className="mr-2" />
+                      Loading album art...
+                    </div>
+                  </CardContent>
+                </Card>
               ) : (
                 lyricsData?.thumbnail && (
-                  <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
-                    <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                      Album Art
-                    </h2>
-                    <Image
-                      src={lyricsData.thumbnail}
-                      alt="Album Art"
-                      width={500}
-                      height={500}
-                      className="w-full h-auto rounded-md"
-                    />
-                  </div>
+                  <Card className="bg-gray-800/50 border-gray-700">
+                    <CardHeader>
+                      <CardTitle className="text-center text-white">Album Art</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Image
+                        src={lyricsData.thumbnail}
+                        alt="Album Art"
+                        width={500}
+                        height={500}
+                        className="w-full h-auto rounded-md"
+                      />
+                    </CardContent>
+                  </Card>
                 )
               )}
-              <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-6">
-                <h2 className="text-xl font-semibold text-white mb-4 text-center">
-                  Analysis
-                </h2>
-                {isLoadingAnalysis ? (
-                  <div className="text-gray-400 text-center flex items-center justify-center">
-                    <LoadingSpinner className="mr-2" />
-                    Analyzing lyrics...
-                  </div>
-                ) : analysisData?.analysis ? (
-                  <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
-                    {analysisData.analysis}
-                  </div>
-                ) : (
-                  <div className="text-gray-400 text-center">
-                    No analysis available
-                  </div>
-                )}
-              </div>
+              <Card className="bg-gray-800/50 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-center text-white">Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingAnalysis ? (
+                    <div className="text-gray-400 text-center flex items-center justify-center">
+                      <LoadingSpinner className="mr-2" />
+                      Analyzing lyrics...
+                    </div>
+                  ) : analysisData?.analysis ? (
+                    <div className="text-gray-200 whitespace-pre-line prose prose-invert prose-sm">
+                      {analysisData.analysis}
+                    </div>
+                  ) : (
+                    <div className="text-gray-400 text-center">
+                      No analysis available
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         )}
