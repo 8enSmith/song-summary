@@ -27,7 +27,7 @@ type Props<T extends string> = {
   placeholder?: string;
 };
 
-export function AutoComplete<T extends string>({
+export const AutoComplete = <T extends string>({
   selectedValue,
   onSelectedValueChange,
   searchValue,
@@ -36,7 +36,7 @@ export function AutoComplete<T extends string>({
   isLoading,
   emptyMessage = 'No items.',
   placeholder = 'Search...',
-}: Props<T>) {
+}: Props<T>) => {
   const [open, setOpen] = useState(false);
 
   const labels = useMemo(

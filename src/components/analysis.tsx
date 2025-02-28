@@ -6,7 +6,7 @@ interface AnalysisProps {
   isLoading: boolean;
 }
 
-export function Analysis({ analysis, isLoading }: AnalysisProps) {
+export const Analysis = ({ analysis, isLoading }: AnalysisProps) => {
   return (
     <Card className="bg-gray-800/50 border-gray-700">
       <CardHeader>

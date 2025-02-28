@@ -6,8 +6,7 @@ interface LyricsProps {
   isLoading: boolean;
 }
 
-export function Lyrics({ lyrics, isLoading }: LyricsProps) {
-  return (
+export const Lyrics = ({ lyrics, isLoading }: LyricsProps) => (
     <Card className="bg-gray-800/50 border-gray-700">
       <CardHeader>
         <CardTitle className="text-center text-white">Lyrics</CardTitle>
@@ -28,4 +27,3 @@ export function Lyrics({ lyrics, isLoading }: LyricsProps) {
       </CardContent>
     </Card>
   );
-}
