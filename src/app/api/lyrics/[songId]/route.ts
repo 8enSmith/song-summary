@@ -3,18 +3,15 @@ import { NextRequest } from 'next/server';
 import Genius from 'genius-lyrics';
 import { StatusCodes } from 'http-status-codes';
 
-const Client = new Genius.Client(process.env.GENIUS_API_KEY || '');
-
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { songId: string } }
+  { params }: { params: Promise<{ songId: string }> }
 ) {
-  // See https://nextjs.org/docs/messages/sync-dynamic-apis#possible-ways-to-fix-it
   const { songId } = await params;
 
   try {
-    const song = await Client.songs.get(parseInt(songId));
-    console.log(song);
+    const geniusClient = new Genius.Client(process.env.GENIUS_API_KEY || '');
+    const song = await geniusClient.songs.get(parseInt(songId));
 
     if (!song) {
       return Response.json(
