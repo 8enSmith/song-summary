@@ -2,12 +2,6 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { StatusCodes } from 'http-status-codes';
 
-const openai = createOpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY,
-  compatibility: 'strict', // strict mode, enable when using the OpenAI API
-});
-
 export async function POST(req: Request) {
   try {
     const { lyrics } = await req.json();
@@ -18,6 +12,12 @@ export async function POST(req: Request) {
         { status: StatusCodes.BAD_REQUEST }
       );
     }
+
+    const openai = createOpenAI({
+      baseURL: 'https://openrouter.ai/api/v1',
+      apiKey: process.env.OPENROUTER_API_KEY,
+      compatibility: 'strict', // strict mode, enable when using the OpenAI API
+    });
 
     const { text: analysis } = await generateText({
       model: openai('google/gemini-2.0-pro-exp-02-05:free'),

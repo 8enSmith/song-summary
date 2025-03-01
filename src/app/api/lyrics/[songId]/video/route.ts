@@ -5,11 +5,7 @@
 import { google } from 'googleapis';
 import { StatusCodes } from 'http-status-codes';
 
-export async function GET(
-  request: Request,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  { params }: { params: { songId: string } }
-) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const title = searchParams.get('title');
   const artist = searchParams.get('artist');

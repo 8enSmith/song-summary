@@ -1,10 +1,12 @@
-import { describe, expect, test, vi, type Mock } from 'vitest';
 import { generateText } from 'ai';
+import { type Mock, describe, expect, test, vi } from 'vitest';
+
 import { POST } from './route';
-import { openai } from '@ai-sdk/openai';
+
+const openai = vi.fn((model) => model);
 
 vi.mock('@ai-sdk/openai', () => ({
-  openai: vi.fn(),
+  createOpenAI: vi.fn(() => openai),
 }));
 
 vi.mock('ai', () => ({
@@ -44,7 +46,7 @@ describe('POST /api/lyrics/analyze', () => {
     expect(response.status).toBe(200);
     expect(data).toEqual({ analysis: mockAnalysis });
     expect(mockGenerateText).toHaveBeenCalledWith({
-      model: openai('o3-mini'),
+      model: openai('google/gemini-2.0-pro-exp-02-05:free'),
       prompt: expect.stringContaining(mockLyrics),
     });
   });
