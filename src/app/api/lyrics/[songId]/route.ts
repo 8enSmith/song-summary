@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import Genius from 'genius-lyrics';
+import { Client } from 'genius-lyrics-axios';
 import { StatusCodes } from 'http-status-codes';
 
 export async function GET(
@@ -10,7 +10,7 @@ export async function GET(
   const { songId } = await params;
 
   try {
-    const geniusClient = new Genius.Client(process.env.GENIUS_API_KEY || '');
+    const geniusClient = new Client(process.env.GENIUS_API_KEY || '');
     const song = await geniusClient.songs.get(parseInt(songId));
 
     if (!song) {
