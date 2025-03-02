@@ -2,6 +2,9 @@
 
 A modern web application that helps you discover and analyze songs. Get lyrics, AI-powered song analysis, and listen to the analysis through text-to-speech technology.
 
+NOTE: The Genius Lyrics API prohibits the use of their API in popular domains e.g. Vercel. Deploying this project in such a domain results a CAPTCHA being required when the
+API is called. Hence to keep within the TOS with Genius this should only be run locally.
+
 ## Features
 
 - 🎵 Search for songs with an intuitive autocomplete interface
