@@ -13,7 +13,7 @@ API is called. Hence to keep within the TOS with Genius this should only be run 
 - 📝 View song lyrics in a clean, readable format
 - 🤖 AI-powered analysis of song lyrics
 - 📺 Integrated YouTube video player for songs
-- 💅 Modern, responsive UI built with Tailwind CSS
+- 💅 Modern, responsive UI built with shadcn/ui and Tailwind CSS
 
 ## Tech Stack
 
