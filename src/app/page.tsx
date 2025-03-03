@@ -89,7 +89,7 @@ export default function SearchPage() {
                 </CardContent>
               </Card>
             ) : (
-              lyricsData?.thumbnail && (
+              selectedSongData?.albumCover && (
                 <Card className="bg-gray-800/50 border-gray-700">
                   <CardHeader>
                     <CardTitle className="text-center text-white">
@@ -98,7 +98,7 @@ export default function SearchPage() {
                   </CardHeader>
                   <CardContent>
                     <Image
-                      src={lyricsData.thumbnail}
+                      src={selectedSongData.albumCover}
                       alt="Album Art"
                       width={500}
                       height={500}

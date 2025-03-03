@@ -6,6 +6,9 @@ interface SuggestedSong {
   artist: {
     name: string;
   };
+  album: {
+    cover_big: string;
+  };
 }
 
 interface SearchResponse {
@@ -19,20 +22,21 @@ interface SongLyrics {
 }
 
 export const useSongSearch = (query: string) => {
-  return useQuery<{ items: Array<{ id: string; title: string; artist: string }> }>({
+  return useQuery<{ items: Array<{ id: string; title: string; artist: string, albumCover: string }> }>({
     queryKey: ['songs', query],
     queryFn: async () => {
       if (!query) return { items: [] };
       const res = await fetch(`https://api.lyrics.ovh/suggest/${encodeURIComponent(query)}`);
       const data: SearchResponse = await res.json();
-      
+      console.log(data);
       return {
         items: data.data.map(song => ({
           id: `${song.artist.name}___${song.title}`,
           title: song.title,
           artist: song.artist.name,
           value: `${song.artist.name}___${song.title}`,
-          label: `${song.title} - ${song.artist.name}`
+          label: `${song.title} - ${song.artist.name}`,
+          albumCover: song.album.cover_big
         }))
       };
     },
