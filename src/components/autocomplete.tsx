@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import { Command as CommandPrimitive } from 'cmdk';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -76,22 +76,33 @@ export const AutoComplete = <T extends string>({
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center relative">
       <Popover open={open} onOpenChange={setOpen}>
         <Command shouldFilter={false}>
-          <PopoverAnchor asChild>
-            <CommandPrimitive.Input
-              asChild
-              value={searchValue}
-              onValueChange={onSearchValueChange}
-              onKeyDown={(e) => setOpen(e.key !== 'Escape')}
-              onMouseDown={() => setOpen((open) => !!searchValue || !open)}
-              onFocus={() => setOpen(true)}
-              onBlur={onInputBlur}
-            >
-              <Input placeholder={placeholder} />
-            </CommandPrimitive.Input>
-          </PopoverAnchor>
+          <div className="relative">
+            <PopoverAnchor asChild>
+              <CommandPrimitive.Input
+                asChild
+                value={searchValue}
+                onValueChange={onSearchValueChange}
+                onKeyDown={(e) => setOpen(e.key !== 'Escape')}
+                onMouseDown={() => setOpen((open) => !!searchValue || !open)}
+                onFocus={() => setOpen(true)}
+                onBlur={onInputBlur}
+              >
+                <Input placeholder={placeholder} />
+              </CommandPrimitive.Input>
+            </PopoverAnchor>
+            {searchValue && (
+              <button
+                type="button"
+                onClick={reset}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
           {!open && <CommandList aria-hidden="true" className="hidden" />}
           <PopoverContent
             asChild
