@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { LoadingSpinner } from './loading-spinner';
 
 interface AnalysisProps {
@@ -31,4 +32,4 @@ export const Analysis = ({ analysis, isLoading }: AnalysisProps) => {
       </CardContent>
     </Card>
   );
-}
+};

@@ -1,13 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+
 import Image from 'next/image';
+
+import { Analysis } from '@/components/analysis';
 import { AutoComplete } from '@/components/autocomplete';
 import { LoadingSpinner } from '@/components/loading-spinner';
 import { Lyrics } from '@/components/lyrics';
-import { Analysis } from '@/components/analysis';
-import { YouTube } from '@/components/youtube';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { YouTube } from '@/components/youtube';
+
 import {
   useLyricsAnalysis,
   useSongLyrics,
@@ -64,10 +67,7 @@ export default function SearchPage() {
         {selectedSong && (
           <div className="mt-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Lyrics 
-                lyrics={lyricsData?.lyrics}
-                isLoading={isLoadingLyrics}
-              />
+              <Lyrics lyrics={lyricsData?.lyrics} isLoading={isLoadingLyrics} />
               <Analysis
                 analysis={analysisData?.analysis}
                 isLoading={isLoadingAnalysis}
@@ -77,7 +77,9 @@ export default function SearchPage() {
             {isLoadingLyrics ? (
               <Card className="bg-gray-800/50 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-center text-white">Album Art</CardTitle>
+                  <CardTitle className="text-center text-white">
+                    Album Art
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-gray-400 text-center flex items-center justify-center min-h-[200px]">
@@ -90,7 +92,9 @@ export default function SearchPage() {
               lyricsData?.thumbnail && (
                 <Card className="bg-gray-800/50 border-gray-700">
                   <CardHeader>
-                    <CardTitle className="text-center text-white">Album Art</CardTitle>
+                    <CardTitle className="text-center text-white">
+                      Album Art
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Image
