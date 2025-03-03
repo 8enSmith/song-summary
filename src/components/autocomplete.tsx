@@ -116,9 +116,9 @@ export const AutoComplete = <T extends string>({
               )}
               {items.length > 0 && !isLoading ? (
                 <CommandGroup>
-                  {items.map((option) => (
+                  {items.map((option, index) => (
                     <CommandItem
-                      key={option.value}
+                      key={`${option.value}_${index}`}
                       value={option.value}
                       onMouseDown={(e) => e.preventDefault()}
                       onSelect={onSelectItem}

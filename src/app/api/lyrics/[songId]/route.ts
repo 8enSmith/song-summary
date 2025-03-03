@@ -1,6 +1,4 @@
 import { NextRequest } from 'next/server';
-
-import { Client } from 'genius-lyrics-axios';
 import { StatusCodes } from 'http-status-codes';
 
 export async function GET(
@@ -8,20 +6,29 @@ export async function GET(
   { params }: { params: Promise<{ songId: string }> }
 ) {
   const { songId } = await params;
+  const [artist, title] = songId.split('___');
+
+  if (!artist || !title) {
+    return Response.json(
+      { error: 'Invalid song ID format' },
+      { status: StatusCodes.BAD_REQUEST }
+    );
+  }
 
   try {
-    const geniusClient = new Client(process.env.GENIUS_API_KEY || '');
-    const song = await geniusClient.songs.get(parseInt(songId));
-
-    if (!song) {
+    const res = await fetch(
+      `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`
+    );
+    
+    if (!res.ok) {
       return Response.json(
-        { error: 'Song not found' },
+        { error: 'Lyrics not found' },
         { status: StatusCodes.NOT_FOUND }
       );
     }
 
-    const lyrics = await song.lyrics();
-    return Response.json({ lyrics, thumbnail: song.thumbnail });
+    const data = await res.json();
+    return Response.json({ lyrics: data.lyrics });
   } catch (error) {
     console.error('Error fetching lyrics:', error);
     return Response.json(
