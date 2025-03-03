@@ -4,9 +4,6 @@ A modern web application that helps you discover and analyze songs. Get lyrics a
 
 ![alt text](image.png)
 
-NOTE: The Genius Lyrics API prohibits the use of their API in popular domains e.g. Vercel. Deploying this project in such a domain results a CAPTCHA being required when the
-API is called. Hence to keep within the TOS with Genius this should only be run locally.
-
 ## Features
 
 - 🎵 Search for songs with an intuitive autocomplete interface
@@ -24,7 +21,6 @@ API is called. Hence to keep within the TOS with Genius this should only be run 
 - [React Query](https://tanstack.com/query/latest) - Data fetching
 - [Radix UI](https://www.radix-ui.com/) - Accessible UI components
 - [Google APIs](https://github.com/googleapis/google-api-nodejs-client) - YouTube integration
-- [Genius Lyrics](https://genius.com/) - Lyrics data
 
 ## Getting Started
 
