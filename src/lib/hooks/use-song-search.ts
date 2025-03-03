@@ -1,23 +1,40 @@
 import { useQuery } from '@tanstack/react-query';
 
-interface Song {
+interface SuggestedSong {
   id: string;
   title: string;
-  artist: string;
+  artist: {
+    name: string;
+  };
+}
+
+interface SearchResponse {
+  data: SuggestedSong[];
+  total: number;
+  next: string;
 }
 
 interface SongLyrics {
   lyrics: string;
-  thumbnail: string;
 }
 
 export const useSongSearch = (query: string) => {
-  return useQuery<{ items: Song[] }>({
+  return useQuery<{ items: Array<{ id: string; title: string; artist: string }> }>({
     queryKey: ['songs', query],
     queryFn: async () => {
       if (!query) return { items: [] };
-      const res = await fetch(`/api/lyrics?q=${encodeURIComponent(query)}`);
-      return res.json();
+      const res = await fetch(`https://api.lyrics.ovh/suggest/${encodeURIComponent(query)}`);
+      const data: SearchResponse = await res.json();
+      
+      return {
+        items: data.data.map(song => ({
+          id: `${song.artist.name}___${song.title}`,
+          title: song.title,
+          artist: song.artist.name,
+          value: `${song.artist.name}___${song.title}`,
+          label: `${song.title} - ${song.artist.name}`
+        }))
+      };
     },
     enabled: query.length > 0,
   });
@@ -28,7 +45,10 @@ export const useSongLyrics = (songId: string) => {
     queryKey: ['lyrics', songId],
     queryFn: async () => {
       if (!songId) return { lyrics: '' };
-      const res = await fetch(`/api/lyrics/${songId}`);
+      const [artist, title] = songId.split('___');
+      if (!artist || !title) return { lyrics: '' };
+      
+      const res = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`);
       return res.json();
     },
     enabled: !!songId,
@@ -56,12 +76,19 @@ export const useVideoId = (songId: string, title?: string, artist?: string) => {
   return useQuery({
     queryKey: ['video', songId],
     queryFn: async () => {
-      if (!songId || !title || !artist) return { videoId: '' };
+      if (!songId) return { videoId: '' };
+      // Extract artist and title from songId since they're encoded in it
+      const [artistFromId, titleFromId] = songId.split('___');
+      const finalArtist = artist || artistFromId;
+      const finalTitle = title || titleFromId;
+      
+      if (!finalArtist || !finalTitle) return { videoId: '' };
+      
       const res = await fetch(
-        `/api/lyrics/${songId}/video?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`
+        `/api/lyrics/${songId}/video?title=${encodeURIComponent(finalTitle)}&artist=${encodeURIComponent(finalArtist)}`
       );
       return res.json();
     },
-    enabled: !!songId && !!title && !!artist,
+    enabled: !!songId,
   });
 };

@@ -1,6 +1,4 @@
 import { NextRequest } from 'next/server';
-
-import { Client } from 'genius-lyrics-axios';
 import { StatusCodes } from 'http-status-codes';
 
 export async function GET(request: NextRequest) {
@@ -11,16 +9,24 @@ export async function GET(request: NextRequest) {
     return Response.json({ items: [] }, { status: StatusCodes.OK });
   }
 
-  const geniusClient = new Client(process.env.GENIUS_API_KEY || '');
-  const searches = await geniusClient.songs.search(query);
+  try {
+    const res = await fetch(`https://api.lyrics.ovh/suggest/${encodeURIComponent(query)}`);
+    const data = await res.json();
 
-  const items = searches.map(({ id, title, artist: { name } }) => ({
-    id: id.toString(),
-    title,
-    artist: name,
-    value: id.toString(),
-    label: `${title} - ${name}`,
-  }));
+    const items = data.data.map((song: { title: string; artist: { name: string } }) => ({
+      id: `${song.artist.name}___${song.title}`,
+      title: song.title,
+      artist: song.artist.name,
+      value: `${song.artist.name}___${song.title}`,
+      label: `${song.title} - ${song.artist.name}`,
+    }));
 
-  return Response.json({ items });
+    return Response.json({ items });
+  } catch (error) {
+    console.error('Error searching songs:', error);
+    return Response.json(
+      { error: 'Failed to search songs' },
+      { status: StatusCodes.INTERNAL_SERVER_ERROR }
+    );
+  }
 }
