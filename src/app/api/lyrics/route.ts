@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+
 import { StatusCodes } from 'http-status-codes';
 
 export async function GET(request: NextRequest) {
@@ -10,16 +11,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const res = await fetch(`https://api.lyrics.ovh/suggest/${encodeURIComponent(query)}`);
+    const res = await fetch(
+      `https://api.lyrics.ovh/suggest/${encodeURIComponent(query)}`
+    );
     const data = await res.json();
 
-    const items = data.data.map((song: { title: string; artist: { name: string } }) => ({
-      id: `${song.artist.name}___${song.title}`,
-      title: song.title,
-      artist: song.artist.name,
-      value: `${song.artist.name}___${song.title}`,
-      label: `${song.title} - ${song.artist.name}`,
-    }));
+    const items = data.data.map(
+      (song: { title: string; artist: { name: string } }) => ({
+        id: `${song.artist.name}___${song.title}`,
+        title: song.title,
+        artist: song.artist.name,
+        value: `${song.artist.name}___${song.title}`,
+        label: `${song.title} - ${song.artist.name}`,
+      })
+    );
 
     return Response.json({ items });
   } catch (error) {

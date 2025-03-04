@@ -43,7 +43,7 @@ export default function SearchPage() {
     })) ?? [];
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-5xl relative">
         <h1 className="text-7xl font-extrabold text-white mb-8 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300 transition-all duration-300 hover:scale-105 hover:from-white hover:to-blue-300">
           Song Summary

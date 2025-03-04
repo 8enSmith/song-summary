@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+
 import { StatusCodes } from 'http-status-codes';
 
 export async function GET(
@@ -19,7 +20,7 @@ export async function GET(
     const res = await fetch(
       `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`
     );
-    
+
     if (!res.ok) {
       return Response.json(
         { error: 'Lyrics not found' },
