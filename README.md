@@ -2,7 +2,9 @@
 
 A modern web application that helps you discover and analyze songs. Get lyrics and AI-powered song analysis.
 
-![alt text](image.png)
+<p align="center">
+   <img width="278" alt="image" src="https://github.com/user-attachments/assets/15de9c71-ce13-41b5-a827-a80bd14617a8" />
+</p>
 
 ## Features
 
