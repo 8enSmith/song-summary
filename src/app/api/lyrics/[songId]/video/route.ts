@@ -15,7 +15,6 @@ export async function GET(request: Request) {
   }
 
   if (!process.env.YOUTUBE_API_KEY) {
-    console.error('YouTube API key is not configured');
     return Response.json(
       { error: 'YouTube API configuration error' },
       { status: 500 }
@@ -23,8 +22,6 @@ export async function GET(request: Request) {
   }
 
   try {
-    console.log('Setting up YouTube client...');
-
     const youtube = google.youtube({
       version: 'v3',
       auth: process.env.YOUTUBE_API_KEY,
@@ -32,7 +29,6 @@ export async function GET(request: Request) {
 
     // Form a search query for YouTube
     const query = `${title} ${artist} official music video`;
-    console.log('Searching for:', query);
 
     // Search for the video using the YouTube Data API
     const searchResponse = await youtube.search.list({
@@ -43,19 +39,13 @@ export async function GET(request: Request) {
       videoEmbeddable: 'true',
     });
 
-    console.log('Search response received:', searchResponse.data);
-
     if (!searchResponse.data.items || searchResponse.data.items.length === 0) {
-      console.log('No videos found');
       return Response.json({ videoId: '' });
     }
 
     const videoId = searchResponse.data.items[0].id?.videoId || '';
-    console.log('Video ID found:', videoId);
     return Response.json({ videoId });
   } catch (error) {
-    console.error('Full error:', error);
-
     // Check if it's a googleapis error
     const gError = error as {
       code?: number;

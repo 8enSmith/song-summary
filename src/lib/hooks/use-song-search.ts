@@ -37,7 +37,7 @@ export const useSongSearch = (query: string) => {
         `https://api.lyrics.ovh/suggest/${encodeURIComponent(query)}`
       );
       const data: SearchResponse = await res.json();
-      console.log(data);
+
       return {
         items: data.data.map((song) => ({
           id: `${song.artist.name}___${song.title}`,
