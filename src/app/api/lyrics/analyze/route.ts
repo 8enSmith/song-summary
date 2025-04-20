@@ -1,4 +1,4 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
 import { StatusCodes } from 'http-status-codes';
 
@@ -13,14 +13,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const openai = createOpenAI({
-      baseURL: 'https://openrouter.ai/api/v1',
+    const openrouter = createOpenRouter({
       apiKey: process.env.OPENROUTER_API_KEY,
-      compatibility: 'strict', // strict mode, enable when using the OpenAI API
     });
 
     const { text: analysis } = await generateText({
-      model: openai('google/gemini-2.0-pro-exp-02-05:free'),
+      model: openrouter.languageModel('mistralai/mistral-7b-instruct:free'),
       prompt: `You are a music expert who analyzes song lyrics. Provide a concise but insightful analysis of the themes, meaning, and emotional content of the lyrics provided. Keep the analysis to 2-3 paragraphs. The lyrics are as follows: ${lyrics}`,
     });
 
