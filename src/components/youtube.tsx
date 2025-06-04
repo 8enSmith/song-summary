@@ -29,8 +29,6 @@ const StaticTVPlaceholder = ({ isVisible }: { isVisible: boolean }) => {
 export function YouTube({ videoId }: YouTubeProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  if (!videoId) return null;
-
   const handleLoad = () => {
     setIsLoaded(true);
   };
@@ -39,7 +37,7 @@ export function YouTube({ videoId }: YouTubeProps) {
     <Card className="bg-gray-800/50 border-gray-700">
       <CardContent className="p-6">
         <div className="relative pb-[56.25%] h-0">
-          <StaticTVPlaceholder isVisible={!isLoaded} />
+          <StaticTVPlaceholder isVisible={!isLoaded || !videoId} />
           <iframe
             className={`absolute top-0 left-0 w-full h-full rounded-md transition-opacity duration-1500 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
