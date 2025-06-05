@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     });
 
     const { text: analysis } = await generateText({
-      model: openrouter.languageModel('mistralai/mistral-7b-instruct:free'),
+      model: openrouter.chat('mistralai/mistral-7b-instruct:free'),
       prompt: `You are a music expert who analyzes song lyrics. Provide a concise but insightful analysis of the themes, meaning, and emotional content of the lyrics provided. Keep the analysis to 2-3 paragraphs. The lyrics are as follows: ${lyrics}`,
     });
 

@@ -58,9 +58,9 @@ export default function SearchPage() {
           emptyMessage={isLoading ? 'Loading...' : 'No songs found.'}
         />
 
-        {selectedSong && videoData?.videoId && (
+        {selectedSong && (
           <div className="mt-8">
-            <YouTube videoId={videoData.videoId} />
+            <YouTube videoId={videoData?.videoId} />
           </div>
         )}
 
