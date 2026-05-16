@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     });
 
     const { text: analysis } = await generateText({
-      model: openrouter.chat('nvidia/nemotron-3-super-120b-a12b:free'),
+      model: openrouter.chat('nvidia/nemotron-3-nano-30b-a3b:free'),
       prompt: `You are a music expert who analyzes song lyrics. Provide a concise but insightful analysis of the themes, meaning, and emotional content of the lyrics provided. Keep the analysis to 2-3 paragraphs. The lyrics are as follows: ${lyrics}`,
     });
 
