@@ -1,73 +1,82 @@
 import { generateText } from 'ai';
-import { type Mock, describe, expect, test, vi } from 'vitest';
+import { type Mock, beforeEach, describe, expect, test, vi } from 'vitest';
+
+import { getFreeModels } from '@/lib/free-models';
 
 import { POST } from './route';
-
-const openai = vi.fn((model) => model);
-
-vi.mock('@ai-sdk/openai', () => ({
-  createOpenAI: vi.fn(() => openai),
-}));
 
 vi.mock('ai', () => ({
   generateText: vi.fn(),
 }));
 
+vi.mock('@/lib/free-models', () => ({
+  getFreeModels: vi.fn(),
+  FREE_ROUTER: 'openrouter/free',
+}));
+
+const mockGenerateText = generateText as Mock;
+const mockGetFreeModels = getFreeModels as Mock;
+
+const postLyrics = async (body: unknown) => {
+  const response = await POST(
+    new Request('http://localhost/api/lyrics/analyze', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
+  );
+  return { status: response.status, data: await response.json() };
+};
+
 describe('POST /api/lyrics/analyze', () => {
-  test('returns 400 when lyrics are not provided', async () => {
-    const request = new Request('http://localhost/api/lyrics/analyze', {
-      method: 'POST',
-      body: JSON.stringify({}),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(400);
-    expect(data).toEqual({ error: 'Lyrics are required' });
-  });
-
-  test('returns analysis when lyrics are provided', async () => {
-    const mockLyrics = 'Test lyrics';
-    const mockAnalysis = 'Test analysis';
-
+  beforeEach(() => {
+    mockGetFreeModels.mockResolvedValue([
+      'a:free',
+      'b:free',
+      'openrouter/free',
+    ]);
     // Mock the generateText function
-    const mockGenerateText = generateText as Mock;
-    mockGenerateText.mockResolvedValue({ text: mockAnalysis });
+    mockGenerateText.mockImplementation(async ({ model }) => ({
+      text: [model.modelId, ...(model.settings.models ?? [])].join(' '),
+    }));
+  });
 
-    const request = new Request('http://localhost/api/lyrics/analyze', {
-      method: 'POST',
-      body: JSON.stringify({ lyrics: mockLyrics }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(data).toEqual({ analysis: mockAnalysis });
-    expect(mockGenerateText).toHaveBeenCalledWith({
-      model: openai('google/gemini-2.0-pro-exp-02-05:free'),
-      prompt: expect.stringContaining(mockLyrics),
+  test('returns 400 when lyrics are not provided', async () => {
+    expect(await postLyrics({})).toEqual({
+      status: 400,
+      data: { error: 'Lyrics are required' },
     });
   });
+
+  test.each<[string, string[], string]>([
+    [
+      'a ranked fallback chain',
+      ['a:free', 'b:free', 'openrouter/free'],
+      'a:free b:free openrouter/free',
+    ],
+    [
+      'only the router because the model list was unavailable',
+      ['openrouter/free'],
+      'openrouter/free',
+    ],
+  ])(
+    'sends %s to OpenRouter and returns the analysis',
+    async (_name, models, expectedAnalysis) => {
+      mockGetFreeModels.mockResolvedValue(models);
+
+      expect(await postLyrics({ lyrics: 'Test lyrics' })).toEqual({
+        status: 200,
+        data: { analysis: expectedAnalysis },
+      });
+    }
+  );
 
   test('returns 500 when analysis fails', async () => {
-    const mockLyrics = 'Test lyrics';
-    const mockError = new Error('Analysis failed');
-
     // Mock the generateText function to throw an error
-    const mockGenerateText = generateText as Mock;
-    mockGenerateText.mockRejectedValue(mockError);
+    mockGenerateText.mockRejectedValue(new Error('Analysis failed'));
 
-    const request = new Request('http://localhost/api/lyrics/analyze', {
-      method: 'POST',
-      body: JSON.stringify({ lyrics: mockLyrics }),
+    expect(await postLyrics({ lyrics: 'Test lyrics' })).toEqual({
+      status: 500,
+      data: { error: 'Failed to analyze lyrics' },
     });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(500);
-    expect(data).toEqual({ error: 'Failed to analyze lyrics' });
   });
 });

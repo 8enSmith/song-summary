@@ -2,6 +2,8 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
 import { StatusCodes } from 'http-status-codes';
 
+import { getFreeModels } from '@/lib/free-models';
+
 export async function POST(req: Request) {
   try {
     const { lyrics } = await req.json();
@@ -17,8 +19,13 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENROUTER_API_KEY,
     });
 
+    const [primary, ...fallbacks] = await getFreeModels();
+
     const { text: analysis } = await generateText({
-      model: openrouter.chat('minimax/minimax-m3.1-flash:free'),
+      model: openrouter.chat(
+        primary,
+        fallbacks.length > 0 ? { models: fallbacks } : {}
+      ),
       prompt: `You are a music expert who analyzes song lyrics. Provide a concise but insightful analysis of the themes, meaning, and emotional content of the lyrics provided. Keep the analysis to 2-3 paragraphs. The lyrics are as follows: ${lyrics}`,
     });
 
