@@ -10,7 +10,7 @@ A modern web application that helps you discover and analyze songs. Get lyrics a
 
 - 🎵 Search for songs with an intuitive autocomplete interface
 - 📝 View song lyrics in a clean, readable format
-- 🤖 AI-powered analysis of song lyrics (using Google Gemini 2.0 pro via OpenRouter)
+- 🤖 AI-powered analysis of song lyrics (using a free model chosen automatically from OpenRouter)
 - 📺 Integrated YouTube video player for songs
 - 💅 Modern, responsive UI built with shadcn/ui and Tailwind CSS
 
