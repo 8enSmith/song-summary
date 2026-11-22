@@ -1,6 +1,12 @@
 import { describe, expect, test } from 'vitest';
 
-import { type CatalogModel, FREE_ROUTER, pickFreeModels } from './free-models';
+import {
+  type CatalogModel,
+  FREE_ROUTER,
+  type FetchCatalog,
+  createFreeModels,
+  pickFreeModels,
+} from './free-models';
 
 const model = (
   id: string,
@@ -99,5 +105,74 @@ describe('pickFreeModels', () => {
     ['returns only the router for an empty catalogue', [], [FREE_ROUTER]],
   ])('%s', (_name, catalog, expected) => {
     expect(pickFreeModels(catalog)).toEqual(expected);
+  });
+});
+
+const catalogue = (...ids: string[]) => ({ data: ids.map((id) => model(id)) });
+
+const respondWith =
+  (body: unknown, status = 200): FetchCatalog =>
+  async () =>
+    new Response(JSON.stringify(body), { status });
+
+const hangUntilAborted: FetchCatalog = (_url, { signal }) =>
+  new Promise((_resolve, reject) =>
+    signal.addEventListener('abort', () => reject(signal.reason))
+  );
+
+const failing: FetchCatalog = async () => {
+  throw new Error('network down');
+};
+
+describe('createFreeModels', () => {
+  test.each<[string, FetchCatalog]>([
+    ['the fetch rejects', failing],
+    ['the response is not OK', respondWith(catalogue('a:free'), 503)],
+    ['the body is malformed', respondWith({ models: [] })],
+    ['the fetch times out', hangUntilAborted],
+  ])('falls back to the router when %s', async (_name, fetchCatalog) => {
+    const getFreeModels = createFreeModels({ fetchCatalog, timeoutMs: 10 });
+    expect(await getFreeModels()).toEqual([FREE_ROUTER]);
+  });
+
+  test('accepts entries with null optional fields', async () => {
+    const getFreeModels = createFreeModels({
+      fetchCatalog: respondWith({
+        data: [
+          {
+            id: 'a:free',
+            hugging_face_id: '',
+            architecture: { output_modalities: ['text'] },
+            reasoning: null,
+          },
+        ],
+      }),
+    });
+    expect(await getFreeModels()).toEqual(['a:free', FREE_ROUTER]);
+  });
+
+  test('tries the catalogue again after a failure instead of caching the fallback', async () => {
+    let current = failing;
+    const getFreeModels = createFreeModels({
+      fetchCatalog: (url, init) => current(url, init),
+    });
+    await getFreeModels();
+    current = respondWith(catalogue('a:free'));
+    expect(await getFreeModels()).toEqual(['a:free', FREE_ROUTER]);
+  });
+
+  test('reuses picks for an hour, then refreshes them', async () => {
+    let clock = 0;
+    let body = catalogue('a:free');
+    const getFreeModels = createFreeModels({
+      fetchCatalog: async () => new Response(JSON.stringify(body)),
+      now: () => clock,
+    });
+    await getFreeModels();
+    body = catalogue('b:free');
+    clock = 59 * 60_000;
+    expect(await getFreeModels()).toEqual(['a:free', FREE_ROUTER]);
+    clock = 61 * 60_000;
+    expect(await getFreeModels()).toEqual(['b:free', FREE_ROUTER]);
   });
 });
