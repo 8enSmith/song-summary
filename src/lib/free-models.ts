@@ -1,3 +1,4 @@
+// cspell:words openrouter
 import { z } from 'zod';
 
 export const FREE_ROUTER = 'openrouter/free';

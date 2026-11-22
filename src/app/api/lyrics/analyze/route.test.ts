@@ -1,3 +1,4 @@
+// cspell:words openrouter
 import { generateText } from 'ai';
 import { type Mock, beforeEach, describe, expect, test, vi } from 'vitest';
 
