@@ -66,11 +66,12 @@ describe('pickFreeModels', () => {
     [
       'reads total rather than active parameters',
       [
-        model('nvidia/super:free', {
-          hugging_face_id: 'nvidia/Nemotron-3.5-Super-VL-120B-A12B-BF16',
+        model('nvidia/lightning:free', {
+          hugging_face_id: 'nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16',
         }),
+        model('acme/big:free', { hugging_face_id: 'Acme/Big-1T-A4B' }),
       ],
-      ['nvidia/super:free', FREE_ROUTER],
+      ['nvidia/lightning:free', 'acme/big:free', FREE_ROUTER],
     ],
     [
       'keeps models of unknown size',
